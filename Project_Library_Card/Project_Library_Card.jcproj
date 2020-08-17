@@ -1,0 +1,8 @@
+<JavaCardProject name="Project_Library_Card">
+<USER>
+<PKG name="com.nth.smartcard" aid="11 22 33 44 55 01 01" major="1" minor="0">
+<APPLET aid="11 22 33 44 55 01 01 00" instanceaid="" parameter="" authority="" privileges="" index="-23080" name="Main"/>
+</PKG>
+<Libs/>
+</USER>
+</JavaCardProject>
