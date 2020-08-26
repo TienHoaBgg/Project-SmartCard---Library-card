@@ -5,8 +5,6 @@
  */
 package com.nth.smartcard.view;
 
-import com.nth.smartcard.view.Library;
-import com.nth.smartcard.view.VerifyRSA;
 import com.nth.smartcard.utils.SmartCardWork;
 import com.nth.smartcard.model.Infomation;
 import java.awt.Color;
@@ -23,7 +21,7 @@ public class GUI extends javax.swing.JFrame {
      * Creates new form GUI
      */
     private String imagePath;
-    private SmartCardWork card;
+    private final SmartCardWork card;
     private ChangeInfo changeInfo;
     private Library library;
     private ChangePin verifyCard;

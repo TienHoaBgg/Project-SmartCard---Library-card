@@ -26,6 +26,8 @@ import javax.smartcardio.TerminalFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 
 /**
  *
@@ -45,6 +47,31 @@ public class SmartCardWork {
 
     public SmartCardWork() {
 
+    }
+
+    public static void main(String[] args) {
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Enter a password:");
+        JPasswordField pass = new JPasswordField(10);
+        panel.add(label);
+        panel.add(pass);
+        String[] options = new String[]{"OK", "Cancel"};
+        int option = JOptionPane.showOptionDialog(null, panel, "The title",
+                JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null, options, options[1]);
+        if (option == 0) // pressing OK button
+        {
+            char[] password = pass.getPassword();
+            System.out.println("Your password is: " + new String(password));
+        }
+
+//        JPasswordField pf = new JPasswordField();
+//        int okCxl = JOptionPane.showConfirmDialog(null, pf, "Enter Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+//
+//        if (okCxl == JOptionPane.OK_OPTION) {
+//            String password = new String(pf.getPassword());
+//            System.err.println("You entered: " + password);
+//        }
     }
 
     public boolean connectCard() {
@@ -276,14 +303,11 @@ public class SmartCardWork {
             }
             String check = Integer.toHexString(response.getSW());
             if (check.equals("9000")) {
-//                JOptionPane.showMessageDialog(null, "Save thành công ");
                 return true;
             } else {
-//                JOptionPane.showMessageDialog(null, "Save không thành công");
                 return false;
             }
         } catch (Exception ex) {
-
             JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra");
         }
         return false;
@@ -306,7 +330,7 @@ public class SmartCardWork {
             byte[] leng = new byte[4];
             while (inLeng >= 0) {
                 int len = (lengthImg - (250 * inLeng));
-                response = channel.transmit(new CommandAPDU((byte) 0x00, (byte) 0x03, (byte) len, (byte) 0x26, leng));;
+                response = channel.transmit(new CommandAPDU((byte) 0x00, (byte) 0x03, (byte) len, (byte) 0x26, leng));
                 temp = response.getData();
                 for (int i = 0; i < temp.length; i++) {
                     images[point] = temp[i];
@@ -317,12 +341,6 @@ public class SmartCardWork {
                 lengthImg -= len;
                 inLeng--;
             }
-
-//            if (144 == check) {
-//                JOptionPane.showMessageDialog(null, "Read thành công ");
-//            } else {
-//                JOptionPane.showMessageDialog(null, "Read không thành công");
-//            }
         } catch (CardException ex) {
             JOptionPane.showMessageDialog(null, "Đã có lỗi xảy ra khi đọc ảnh");
         }
@@ -431,15 +449,30 @@ public class SmartCardWork {
         try {
             if (result.trim().equals("6311")) {
                 if (verifyFalse < 3) {
-                    String p = JOptionPane.showInputDialog(null, "<html><p style=\"color:red\">Thẻ sẽ bị khóa sau <b>" + (3 - verifyFalse)
-                            + "</b> lần nhập </p>\n Nhập mã pin ", "Mã pin", JOptionPane.QUESTION_MESSAGE);
-                    byte[] pin = SmartCardWork.stringToByteArr(p);
-                    if (verifyCard(pin)) {
-                        return true;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Mã pin sai");
-                        return false;
+                    JPanel panel = new JPanel();
+                    JLabel label = new JLabel("<html><p style=\"color:red\">Thẻ sẽ bị khóa sau <b>" + (3 - verifyFalse)
+                            + "</b> lần nhập </p>\n Nhập mã pin");
+                    JPasswordField pass = new JPasswordField(10);
+                    panel.add(label);
+                    panel.add(pass);
+                    String[] options = new String[]{"OK", "Cancel"};
+                    int option = JOptionPane.showOptionDialog(null, panel, "Nhập mật khẩu để xác thực thẻ",
+                            JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                            null, options, options[1]);
+                    if (option == 0)
+                    {
+                        String password = new String(pass.getPassword());
+                        byte[] pin = SmartCardWork.stringToByteArr(password);
+                        if (verifyCard(pin)) {
+                            return true;
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Mã pin sai");
+                            return false;
+                        }
                     }
+
+//                    String p = JOptionPane.showInputDialog(null, "<html><p style=\"color:red\">Thẻ sẽ bị khóa sau <b>" + (3 - verifyFalse)
+//                            + "</b> lần nhập </p>\n Nhập mã pin ", "Mã pin", JOptionPane.QUESTION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(null, "Thẻ đã bị khóa do nhập mã pin sai quá số lượt");
                     return false;
@@ -454,6 +487,7 @@ public class SmartCardWork {
         } catch (Exception e) {
             return false;
         }
+        return false;
     }
 
     private Infomation getInfoInString(String data) {
